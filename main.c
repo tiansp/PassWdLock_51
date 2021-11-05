@@ -57,6 +57,7 @@ void main()
     }
 }
 
+// 输入密码
 void PasdSend(uchar KeyValue, uchar *pwd, uchar *j)
 {
 
@@ -72,6 +73,7 @@ void PasdSend(uchar KeyValue, uchar *pwd, uchar *j)
     }
 }
 
+//显示字符串
 void DisChar(uchar *str, uchar num)
 {
     uchar j1;
@@ -82,6 +84,7 @@ void DisChar(uchar *str, uchar num)
     }
 }
 
+//检查，确定
 void Check(uchar *pwd, uchar *j)
 {
     uchar i = 0;

@@ -1,10 +1,10 @@
 #include "reg52.h"
 #include "main.h"
 
-sbit LED_R  = P2^0;
-sbit LED_G = P2^1;
+sbit LED_R  = P2^0; //红灯
+sbit LED_G = P2^1; //绿灯
 
-
+//显示LED灯
 void DisLed(uchar i)
 {
 
