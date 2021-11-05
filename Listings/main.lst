@@ -1,0 +1,250 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              11/05/2021 13:02:13 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\keil_v5\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "main.h"
+   3          
+   4          uchar FistDis[15] = "Press to Enter!";
+   5          uchar Confident[6] = "INPUT:";
+   6          uchar dat[] = "123A456B789CD0EF";
+   7          
+   8          uchar cur_paswd[6] = "123123";
+   9          
+  10          uchar ERROR[6] = "ERROR!";
+  11          uchar OK[3] = "OK!";
+  12          uchar ChangePwdDis[17] = "CHANGE YOUR PWD:";
+  13          uchar BACKSPACEKEY = 12;
+  14          uchar CHECKKEY = 14;
+  15          uchar CHANGEKEY = 3;
+  16          uchar CLEARKEY = 7;
+  17          uchar QUITKEY = 11;
+  18          
+  19          void main()
+  20          {
+  21   1          uchar paswd[6] = "000000";
+  22   1          uchar j = 0;
+  23   1          uchar KeyValue = 'k';
+  24   1      
+  25   1          // LcdWriteCom(0x08);
+  26   1          while (1)
+  27   1          {
+  28   2      
+  29   2              KeyValue = KeyDown();
+  30   2      
+  31   2              if (KeyValue == CHECKKEY)
+  32   2              {
+  33   3                  LcdInit();
+  34   3                  DisChar(Confident, 6);
+  35   3                  while (1)
+  36   3                  {
+  37   4                      KeyValue = KeyDown();
+  38   4      
+  39   4                      if (KeyValue == BACKSPACEKEY)
+  40   4                      {
+  41   5                          BackSpace(paswd, &j);
+  42   5                      }
+  43   4                      else if (KeyValue == CHECKKEY)
+  44   4                      {
+  45   5                          Check(paswd, &j);
+  46   5                      }
+  47   4                      else if (KeyValue == CLEARKEY)
+  48   4                      {
+  49   5                          clear(paswd, &j);
+  50   5                      }
+  51   4                      else
+  52   4                      {
+  53   5                          PasdSend(KeyValue, paswd, &j);
+  54   5                      }
+C51 COMPILER V9.60.0.0   MAIN                                                              11/05/2021 13:02:13 PAGE 2   
+
+  55   4                  }
+  56   3              }
+  57   2          }
+  58   1      }
+  59          
+  60          void PasdSend(uchar KeyValue, uchar *pwd, uchar *j)
+  61          {
+  62   1      
+  63   1          uchar k = 'k';
+  64   1          if (*j < 6)
+  65   1          {
+  66   2              if (KeyValue != k)
+  67   2              {
+  68   3                  pwd[*j] = dat[KeyValue];
+  69   3                  *j += 1;
+  70   3              }
+  71   2              Display(j);
+  72   2          }
+  73   1      }
+  74          
+  75          void DisChar(uchar *str, uchar num)
+  76          {
+  77   1          uchar j1;
+  78   1          LcdWriteCom(0x01);
+  79   1          for (j1 = 0; j1 < num; j1++)
+  80   1          {
+  81   2              LcdWriteData(str[j1]);
+  82   2          }
+  83   1      }
+  84          
+  85          void Check(uchar *pwd, uchar *j)
+  86          {
+  87   1          uchar i = 0;
+  88   1          uchar k = 'k', key = 'k';
+  89   1          while (pwd[i] == cur_paswd[i])
+  90   1          {
+  91   2              i++;
+  92   2          }
+  93   1          if (i < 5)
+  94   1          {
+  95   2              DisChar(ERROR, 6);
+  96   2              DisLed('R');
+  97   2              while (1)
+  98   2              {
+  99   3                  key = KeyDown();
+ 100   3                  if (key != k && key == QUITKEY)
+ 101   3                  {
+ 102   4                      clear(pwd, j);
+ 103   4                      break;
+ 104   4                  }
+ 105   3              }
+ 106   2          }
+ 107   1          else
+ 108   1          {
+ 109   2              DisChar(OK, 3);
+ 110   2              DisLed('G');
+ 111   2              while (1)
+ 112   2              {
+ 113   3                  key = KeyDown();
+ 114   3                  if (key != k && key == CHANGEKEY)
+ 115   3                  {
+ 116   4                      LcdWriteCom(0x01);
+C51 COMPILER V9.60.0.0   MAIN                                                              11/05/2021 13:02:13 PAGE 3   
+
+ 117   4                      change();
+ 118   4                      clear(pwd, j);
+ 119   4                      break;
+ 120   4                  }
+ 121   3              }
+ 122   2          }
+ 123   1      }
+ 124          
+ 125          void BackSpace(uchar *pwd, uchar *j)
+ 126          {
+ 127   1          uchar cg = 0;
+ 128   1          *j -= 1;
+ 129   1          pwd[*j] = dat[13];
+ 130   1          DisChar(Confident, 6);
+ 131   1          Display(j);
+ 132   1      }
+ 133          
+ 134          void Display(uchar *j)
+ 135          {
+ 136   1          uchar i;
+ 137   1          uchar pwd_[] = "******";
+ 138   1          LcdWriteCom(0x80 + 0x40);
+ 139   1          for (i = 0; i < *j; i++)
+ 140   1          {
+ 141   2              LcdWriteData(pwd_[i]);
+ 142   2          }
+ 143   1      }
+ 144          
+ 145          void clear(uchar *pwd, uchar *j)
+ 146          {
+ 147   1      
+ 148   1          uchar i;
+ 149   1          for (i = 0; i < *j; i++)
+ 150   1          {
+ 151   2              pwd[i] = 0;
+ 152   2          }
+ 153   1          *j = 0;
+ 154   1          DisChar(Confident, 6);
+ 155   1      }
+ 156          void copy(uchar *old, uchar *new, uchar j)
+ 157          {
+ 158   1          uchar i;
+ 159   1          for (i = 0; i < j; i++)
+ 160   1          {
+ 161   2              new[i] = old[i];
+ 162   2          }
+ 163   1      }
+ 164          
+ 165          void change()
+ 166          {
+ 167   1          uchar KeyVal = 'k', k = 'k';
+ 168   1          uchar tmp[6] = "      ";
+ 169   1          uchar j = 0;
+ 170   1          DisChar(Confident, 6);
+ 171   1          copy(cur_paswd, tmp, 6);
+ 172   1          while (1)
+ 173   1          {
+ 174   2              // LcdWriteData('b');
+ 175   2              KeyVal = KeyDown();
+ 176   2              if (KeyVal == QUITKEY)
+ 177   2              {
+ 178   3                  clear(tmp, &j);
+C51 COMPILER V9.60.0.0   MAIN                                                              11/05/2021 13:02:13 PAGE 4   
+
+ 179   3                  break;
+ 180   3              }
+ 181   2              else if (KeyVal == CHECKKEY)
+ 182   2              {
+ 183   3                  if (j < 6)
+ 184   3                  {
+ 185   4                      DisChar(ERROR, 6);
+ 186   4                      quit();
+ 187   4                      clear(tmp, &j);
+ 188   4                      break;
+ 189   4                  }
+ 190   3                  else
+ 191   3                  {
+ 192   4                      copy(tmp, cur_paswd, 6);
+ 193   4                      DisChar(OK, 3);
+ 194   4                      quit();
+ 195   4                      clear(tmp, &j);
+ 196   4                  }
+ 197   3              }
+ 198   2              else if (KeyVal == BACKSPACEKEY)
+ 199   2              {
+ 200   3                  BackSpace(tmp, &j);
+ 201   3              }
+ 202   2              else
+ 203   2              {
+ 204   3                  PasdSend(KeyVal, tmp, &j);
+ 205   3              }
+ 206   2          }
+ 207   1      }
+ 208          
+ 209          void quit()
+ 210          {
+ 211   1          uchar Key = ' ';
+ 212   1          while (1)
+ 213   1          {
+ 214   2              Key = KeyDown();
+ 215   2              if (Key == QUITKEY)
+ 216   2              {
+ 217   3                  break;
+ 218   3              }
+ 219   2          }
+ 220   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1176    ----
+   CONSTANT SIZE    =     19    ----
+   XDATA SIZE       =     75      68
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
