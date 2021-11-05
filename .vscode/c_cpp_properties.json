@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "D:\\keil_v5\\C51\\INC"
+
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "sbit=int",
+                "sfr=char"
+            ],
+            "compilerPath": "C:\\MinGW32\\bin\\gcc.exe",
+            "cStandard": "c89",
+            "cppStandard": "gnu++98",
+            "intelliSenseMode": "windows-gcc-x86"
+        }
+    ],
+    "version": 4
+}

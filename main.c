@@ -90,7 +90,7 @@ void Check(uchar *pwd, uchar *j)
     {
         i++;
     }
-    if (i < 5)
+    if (i < 6)
     {
         DisChar(ERROR, 6);
         DisLed('R');
